@@ -1,0 +1,22 @@
+.gamePlayGrid {
+    display: grid;
+    justify-self: center;
+    align-self: center;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    border: 1px black solid;
+    min-width: 400px;
+    min-height: 400px;
+    max-height: 500px;
+    max-width: 500px;
+    height: 50vh;
+    width: 40vw; 
+    margin: 5px;
+}
+
+.gamePlayGrid > div {
+   border: black 1px solid;
+}
+.gamePlayGrid > div:hover {
+    cursor: pointer;
+}

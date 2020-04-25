@@ -1,23 +1,35 @@
 //Modules
 const gameBoard = (() => {
     'use strict';
-    const _winningArray = [
-        ['0','1','2'],['3','4','5'],['6','7','8'],
-        ['0','3','6'],['1','4','7'],['2','5','8'],
-        ['0','4','8'],['2','4','6']
+    
+    const gamePlayGrid = document.querySelector('.gamePlayGrid');
+    let currentGamboard = [
+        ['','',''],['','',''],['','','']
     ];
-    let currentGamboard = [];
+    const _winningCombinations = [
+        ['a0','a1','a2'],['b0','b1','b2'],['c0','c1','c2'],
+        ['a0','b0','c0'],['a1','b1','c1'],['a2','b2','c2'],
+        ['a0','b1','c2'],['c0','b1','a2']
+    ];
+    
 
     function updateGameboard () {
+        currentGamboard.splice()
         console.log(currentGamboard)
+    }
+    function createGrid () {
+        for (let i = 0; i <= 8; i++){
+            const div = document.createElement('div');
+            div.setAttribute('id',i)
+            gamePlayGrid.appendChild(div);
+        }
     }
     return {
         updateGameboard: updateGameboard,
-
+        createGrid: createGrid,
     }
 })();
+gameBoard.createGrid();
+gameBoard.updateGameboard();
+//Factory Functions
 
-//Factory Funcitons
-const players (name,mark) => {
-
-}
