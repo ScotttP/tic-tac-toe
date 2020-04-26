@@ -16,7 +16,13 @@
 
 .gamePlayGrid > div {
    border: black 1px solid;
+   background-color: white;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-align: center;
 }
 .gamePlayGrid > div:hover {
     cursor: pointer;
+    background-color: rgb(158, 75, 75);
 }

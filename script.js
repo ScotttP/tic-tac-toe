@@ -3,33 +3,42 @@ const gameBoard = (() => {
     'use strict';
     
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
-    let currentGamboard = [
-        ['','',''],['','',''],['','','']
-    ];
-    const _winningCombinations = [
-        ['a0','a1','a2'],['b0','b1','b2'],['c0','c1','c2'],
-        ['a0','b0','c0'],['a1','b1','c1'],['a2','b2','c2'],
-        ['a0','b1','c2'],['c0','b1','a2']
-    ];
-    
+    const gridbuttons = gamePlayGrid.querySelectorAll('div');
 
-    function updateGameboard () {
-        currentGamboard.splice()
+    let currentGamboard =['','','','','','','','',''];
+    const _winningCombinations = [
+        ['0','1','2','','','','','',''],['','','','3','4','5','','',''],
+        ['','','','','','','6','7','8'],['0','','','3','','','6','',''],
+        ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
+        ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
+    ];
+    gridbuttons.forEach((div) => {
+        div.addEventListener('click', () => {
+            let id = div.id;
+            let playerMarker = "X"; // needs to be able to switch to O function for this
+            updateGameboard(id,playerMarker);
+            render(id,playerMarker)//this renders on the board
+        })
+    })
+    function updateGameboard (id,playerMarker) {
+        currentGamboard.splice(id,1,playerMarker)
         console.log(currentGamboard)
     }
-    function createGrid () {
-        for (let i = 0; i <= 8; i++){
-            const div = document.createElement('div');
-            div.setAttribute('id',i)
-            gamePlayGrid.appendChild(div);
-        }
-    }
-    return {
-        updateGameboard: updateGameboard,
-        createGrid: createGrid,
-    }
+
+    return {updateGameboard}
 })();
-gameBoard.createGrid();
-gameBoard.updateGameboard();
+
+const displayController = (() => {
+    'use strict';
+  
+})();
+
 //Factory Functions
 
+const Players = (name,marker) => {
+    
+}
+
+function render (id,playerMarker) {
+    document.getElementById(id).innerText = playerMarker;
+}
