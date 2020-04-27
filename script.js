@@ -1,5 +1,5 @@
 //Modules
-const gameBoard = (() => {
+const gameBoard = ((playerMarker,currentPlayerTurn) => {
     'use strict';
     
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
@@ -15,22 +15,33 @@ const gameBoard = (() => {
     gridbuttons.forEach((div) => {
         div.addEventListener('click', () => {
             let id = div.id;
-            let playerMarker = "X"; // needs to be able to switch to O function for this
-            updateGameboard(id,playerMarker);
-            render(id,playerMarker)//this renders on the board
+            updateGameboard(id);
+            gamePlay.render(id,playerMarker,currentPlayerTurn)//this renders on the board
+            
         })
     })
-    function updateGameboard (id,playerMarker) {
-        currentGamboard.splice(id,1,playerMarker)
+    function updateGameboard (id) {
+        currentGamboard.splice(id,1,id)
         console.log(currentGamboard)
     }
 
     return {updateGameboard}
 })();
 
-const displayController = (() => {
+const gamePlay = (() => {
     'use strict';
-  
+    let playerMarker;
+    let currentPlayerTurn;
+    function render (id,playerMarker,currentPlayerTurn) {
+       currentPlayerTurn = document.getElementById('playerTurnText').innerText
+        if (currentPlayerTurn = 'Player 1'){
+            playerMarker = 'X'
+        }else{playerMarker = 'O'}
+        document.getElementById(id).innerText = playerMarker;
+    
+    }
+
+    return{currentPlayerTurn,playerMarker,render}
 })();
 
 //Factory Functions
@@ -39,6 +50,6 @@ const Players = (name,marker) => {
     
 }
 
-function render (id,playerMarker) {
-    document.getElementById(id).innerText = playerMarker;
-}
+
+
+
