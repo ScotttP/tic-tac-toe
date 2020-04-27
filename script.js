@@ -1,4 +1,23 @@
 //Modules
+const gamePlay = (() => {
+    'use strict';
+    let currentPlayerTurn;
+    let playerMarker;
+
+    function render (id,playerMarker,currentPlayerTurn) {
+        currentPlayerTurn = document.getElementById('playerTurnText');
+        currentPlayerTurn.innerText = 'Player 1';
+        if (currentPlayerTurn.innerText === 'Player 1'){
+            playerMarker = 'X'
+        }else{playerMarker = 'O'}
+
+        document.getElementById(id).innerText = playerMarker;
+        
+    }
+
+    return{currentPlayerTurn,playerMarker,render}
+})();
+
 const gameBoard = ((playerMarker,currentPlayerTurn) => {
     'use strict';
     
@@ -17,7 +36,6 @@ const gameBoard = ((playerMarker,currentPlayerTurn) => {
             let id = div.id;
             updateGameboard(id);
             gamePlay.render(id,playerMarker,currentPlayerTurn)//this renders on the board
-            
         })
     })
     function updateGameboard (id) {
@@ -28,21 +46,6 @@ const gameBoard = ((playerMarker,currentPlayerTurn) => {
     return {updateGameboard}
 })();
 
-const gamePlay = (() => {
-    'use strict';
-    let playerMarker;
-    let currentPlayerTurn;
-    function render (id,playerMarker,currentPlayerTurn) {
-       currentPlayerTurn = document.getElementById('playerTurnText').innerText
-        if (currentPlayerTurn = 'Player 1'){
-            playerMarker = 'X'
-        }else{playerMarker = 'O'}
-        document.getElementById(id).innerText = playerMarker;
-    
-    }
-
-    return{currentPlayerTurn,playerMarker,render}
-})();
 
 //Factory Functions
 
