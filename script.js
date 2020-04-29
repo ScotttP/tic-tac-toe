@@ -1,24 +1,26 @@
 //Modules
+
 const gamePlay = (() => {
     'use strict';
-    let currentPlayerTurn;
-    let playerMarker;
-
-    function render (id,playerMarker,currentPlayerTurn) {
-        currentPlayerTurn = document.getElementById('playerTurnText');
-        currentPlayerTurn.innerText = 'Player 1';
-        if (currentPlayerTurn.innerText === 'Player 1'){
-            playerMarker = 'X'
-        }else{playerMarker = 'O'}
-
-        document.getElementById(id).innerText = playerMarker;
+    
+    let currentPlayerTurn = document.getElementById('playerTurnText');
+    currentPlayerTurn.innerText = 'Player 1'
+    function render (id,currentPlayerTurn) {
         
+        if (currentPlayerTurn.innerText ==='Player 1'){
+            document.getElementById(id).innerText = 'X';
+            currentPlayerTurn.innerText = 'Player 2'
+            
+        }else if(currentPlayerTurn.textContent==='Player 2'){
+            document.getElementById(id).innerText = 'O';
+            currentPlayerTurn.innerText ="Player 1"
+        }else{console.log(currentPlayerTurn.innerText)}
+       
     }
-
-    return{currentPlayerTurn,playerMarker,render}
+    return{currentPlayerTurn,render}
 })();
 
-const gameBoard = ((playerMarker,currentPlayerTurn) => {
+const gameBoard = ((currentPlayerTurn) => {
     'use strict';
     
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
@@ -35,17 +37,16 @@ const gameBoard = ((playerMarker,currentPlayerTurn) => {
         div.addEventListener('click', () => {
             let id = div.id;
             updateGameboard(id);
-            gamePlay.render(id,playerMarker,currentPlayerTurn)//this renders on the board
+            gamePlay.render(id,gamePlay.currentPlayerTurn)//this renders on the board
         })
     })
     function updateGameboard (id) {
         currentGamboard.splice(id,1,id)
         console.log(currentGamboard)
     }
-
+    
     return {updateGameboard}
 })();
-
 
 //Factory Functions
 
