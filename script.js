@@ -7,22 +7,24 @@ const gamePlay = (() => {
     currentPlayerTurn.innerText = 'Player 1 Turn'
 
     function render (id,currentPlayerTurn) {
-        
+        document.getElementById(id).innerText=== '';
         if (document.getElementById(id).innerText=== ''){
             if (currentPlayerTurn.innerText ==='Player 1 Turn'){
                 document.getElementById(id).innerText = 'X';
-                currentPlayerTurn.innerText = 'Player 2 Turn'
+                currentPlayerTurn.innerText = 'Player 2 Turn';
                 
             }else{
                 document.getElementById(id).innerText = 'O';
-                currentPlayerTurn.innerText ='Player 1 Turn'
+                currentPlayerTurn.innerText ='Player 1 Turn';
             }
-        }else{
-            return
         }
 
     }
-    return{currentPlayerTurn,render}
+
+    function reset () {
+        console.log('game ended')
+    }
+    return{currentPlayerTurn,render,reset}
 })();
 
 const gameBoard = (() => {
@@ -47,9 +49,11 @@ const gameBoard = (() => {
     })
     function updateGameboard (id) {
         currentGamboard.splice(id,1,id)
-        compareWin(currentGamboard,id);
+        compareWin(currentGamboard);
+       
+        
     }
-    function compareWin (currentGamboard,id) {// turn this into a loop
+    function compareWin (currentGamboard) {// turn this into a loop
         if (currentGamboard.includes(_winningCombinations[0][0,1,2]) 
         || currentGamboard.includes(_winningCombinations[1][3,4,5]) 
         || currentGamboard.includes(_winningCombinations[2][6,7,8]) 
@@ -58,10 +62,10 @@ const gameBoard = (() => {
         || currentGamboard.includes(_winningCombinations[5][2,5,8]) 
         || currentGamboard.includes(_winningCombinations[6][0,4,8])
         || currentGamboard.includes(_winningCombinations[7][2,4,6])  ){
-            checkSign(id);
+            checkSign();
             }
     }
-    function checkSign(id) { // turn this into a loop
+    function checkSign() { // turn this into a loop
         if(document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
         || document.getElementById(3).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(5).innerText === 'X'
         || document.getElementById(6).innerText === 'X' && document.getElementById(7).innerText === 'X' && document.getElementById(8).innerText === 'X'
@@ -70,8 +74,8 @@ const gameBoard = (() => {
         || document.getElementById(2).innerText === 'X' && document.getElementById(5).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(0).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
-            console.log('X')
-            //reset function
+            console.log('X');
+            gamePlay.reset();
         }else if (document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
         || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
         || document.getElementById(6).innerText === 'O' && document.getElementById(7).innerText === 'O' && document.getElementById(8).innerText === 'O'
@@ -80,8 +84,8 @@ const gameBoard = (() => {
         || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
-            console.log('O')
-            //reset function
+            console.log('O');
+            gamePlay.reset();
         }else{
             //if the X count is < 3 or O count is less than 3, continue the game. if there are no winners then rest and alert a tie
         }
