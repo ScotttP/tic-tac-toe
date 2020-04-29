@@ -4,23 +4,28 @@ const gamePlay = (() => {
     'use strict';
     
     let currentPlayerTurn = document.getElementById('playerTurnText');
-    currentPlayerTurn.innerText = 'Player 1'
+    currentPlayerTurn.innerText = 'Player 1 Turn'
+
     function render (id,currentPlayerTurn) {
         
-        if (currentPlayerTurn.innerText ==='Player 1'){
+        if (currentPlayerTurn.innerText ==='Player 1 Turn'){
             document.getElementById(id).innerText = 'X';
-            currentPlayerTurn.innerText = 'Player 2'
+            currentPlayerTurn.innerText = 'Player 2 Turn'
             
-        }else if(currentPlayerTurn.textContent==='Player 2'){
+        }else if(currentPlayerTurn.textContent==='Player 2 Turn'){
             document.getElementById(id).innerText = 'O';
-            currentPlayerTurn.innerText ="Player 1"
-        }else{console.log(currentPlayerTurn.innerText)}
+            currentPlayerTurn.innerText ='Player 1 Turn'
+        }else{
+            return
+        }
        
     }
+
+    
     return{currentPlayerTurn,render}
 })();
 
-const gameBoard = ((currentPlayerTurn) => {
+const gameBoard = (() => {
     'use strict';
     
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
@@ -37,12 +42,16 @@ const gameBoard = ((currentPlayerTurn) => {
         div.addEventListener('click', () => {
             let id = div.id;
             updateGameboard(id);
-            gamePlay.render(id,gamePlay.currentPlayerTurn)//this renders on the board
+            gamePlay.render(id,gamePlay.currentPlayerTurn)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
         })
     })
     function updateGameboard (id) {
         currentGamboard.splice(id,1,id)
+        compareWin(currentGamboard);
+    }
+    function compareWin (currentGamboard) {
         console.log(currentGamboard)
+        console.log(_winningCombinations)
     }
     
     return {updateGameboard}
