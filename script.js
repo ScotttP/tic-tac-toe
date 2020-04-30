@@ -2,7 +2,7 @@
 
 const gamePlay = (() => {
     'use strict';
-    function compareWin (currentGameBoard,_winningCombinations) {// turn this into a loop?
+    function compareWin (currentGameBoard,_winningCombinations) {
         if (currentGameBoard.includes(_winningCombinations[0][0,1,2]) 
         || currentGameBoard.includes(_winningCombinations[1][3,4,5]) 
         || currentGameBoard.includes(_winningCombinations[2][6,7,8]) 
@@ -14,7 +14,7 @@ const gamePlay = (() => {
             checkSign();
             }
     }
-    function checkSign() { // turn this into a loop?
+    function checkSign() { 
         if(document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
         || document.getElementById(3).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(5).innerText === 'X'
         || document.getElementById(6).innerText === 'X' && document.getElementById(7).innerText === 'X' && document.getElementById(8).innerText === 'X'
@@ -23,8 +23,9 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'X' && document.getElementById(5).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(0).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
-            gameBoard.currentPlayerTurn.innerText = "Player 1 Wins!"
-            reset();
+            gameBoard.currentPlayerTurn.innerText = `${Players.player1Name} Wins!`
+            reset.resetButton.disabled = false;
+            
         }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
         || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
         || document.getElementById(6).innerText === 'O' && document.getElementById(7).innerText === 'O' && document.getElementById(8).innerText === 'O'
@@ -33,21 +34,15 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
-            gameBoard.currentPlayerTurn.innerText = "Player 2 Wins!"
-            reset();
+            gameBoard.currentPlayerTurn.innerText = `${Players.player2Name} Wins!`
+            reset.resetButton.disabled = false;
         }else{
-            //if there are no winners then reset and alert a tie
+            
         }
         
     }
-    
-    
 
-    function reset () {
-    //add reset board function
-       
-    }
-    return{compareWin,reset}
+    return{compareWin}
 })();
 
 const gameBoard = (() => {
@@ -59,14 +54,14 @@ const gameBoard = (() => {
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
     const gridbuttons = gamePlayGrid.querySelectorAll('div');
     
-    const defaultGameBoard = ['','','','','','','','',''];
-    let currentGameBoard = defaultGameBoard
+    let currentGameBoard = ['','','','','','','','',''];
     const _winningCombinations = [
         ['0','1','2','','','','','',''],['','','','3','4','5','','',''],
         ['','','','','','','6','7','8'],['0','','','3','','','6','',''],
         ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
+    
     gridbuttons.forEach((div) => {
         div.addEventListener('click', () => {
             let id = div.id;
@@ -81,7 +76,7 @@ const gameBoard = (() => {
     }
     
     function render (id,currentPlayerTurn) {
-        document.getElementById(id).innerText=== '';
+        document.getElementById(id).innerText === '';
         if (document.getElementById(id).innerText=== ''){
             if (currentPlayerTurn.innerText ==='Player 1 Turn'){
                 document.getElementById(id).innerText = 'X';
@@ -94,15 +89,41 @@ const gameBoard = (() => {
         }
 
     }
+
+    return {updateGameboard,render,currentPlayerTurn,currentGameBoard}
+})();
+
+const reset = (() => {
     
-    return {updateGameboard,render,currentPlayerTurn}
+    let resetButton = document.querySelector('#resetButton')
+    resetButton.disabled = true;
+    resetButton.addEventListener('click',(e) => {
+        resetBoardDisplay();
+        resetButton.disabled = true;
+    })
+    function resetBoardDisplay(){
+        gameBoard.currentGameBoard = ['','','','','','','','',''];
+        for (let i = 0; i <=8; i++){
+            document.getElementById(i).innerText = '';
+        }
+        gameBoard.currentPlayerTurn.innerText = 'Player 1 Turn'
+        console.log(Players.player1Name)
+    }
+    return{resetBoardDisplay,resetButton}
 })();
 
 //Factory Functions
 
-const Players = (name,marker) => {
+const Players = () => {
+    let startButton = document.querySelector('#startButton')
+    startButton.addEventListener('click', () => {
+        player1Name = document.getElementById('player1Name').value
+        player2Name = document.getElementById('player2Name').value
+    })
     
+    return{player1Name,player2Name}
 }
+
 
 
 
