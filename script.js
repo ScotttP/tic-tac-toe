@@ -23,22 +23,24 @@ const gameBoard = ((player2Name,player1Name,xCount,oCount) => {
         ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
-
+        
+    startButton.addEventListener('click', (xCount,oCount) => {
+        let playerNames = Players(player1Name,player2Name);
+       
         xCount = 0;
         oCount = 0;
-        
-    startButton.addEventListener('click', () => {
-        let playerNames = Players(player1Name,player2Name);
-        
-        //console.log(playerNames.player1Name)
-        // console.log(playerNames.player2Name)// showing as undefined.
-        // if (playerNames.player1Name === undefined || playerNames.player1Name === null 
-        // || playerNames.player2Name === undefined || playerNames.player2Name === null){
-        //     alert("Please Enter Your Name.")
-        // }else{
+    
+        console.log(playerNames.player1Name)
+        console.log(playerNames.player2Name)// showing as undefined.
+        if (playerNames.player1Name === undefined || playerNames.player1Name === null 
+        || playerNames.player2Name === undefined || playerNames.player2Name === null){
+            alert("Please Enter Your Name.")
+        }else{
             gridbuttons.forEach((div) => {
                 div.addEventListener('click', () => {
                     let id = div.id;
+                    console.log(xCount)
+                    console.log(oCount)
                     render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
                         if (document.getElementById(id).innerText === 'X'){
                             ++xCount 
@@ -49,8 +51,7 @@ const gameBoard = ((player2Name,player1Name,xCount,oCount) => {
                     
                     })
                 })
-            //}
-            
+            }
     })
 
     function updateGameboard (id,xCount,oCount) {
@@ -65,13 +66,13 @@ const gameBoard = ((player2Name,player1Name,xCount,oCount) => {
     function render (id,currentPlayerTurn,playerNames) {
         document.getElementById(id).innerText === '';
         if (document.getElementById(id).innerText=== ''){
-            if (currentPlayerTurn.innerText === `P1 Turn`){ // ${playerNames.player1Name} 
+            if (currentPlayerTurn.innerText === `${playerNames.player1Name} Turn`){
                 document.getElementById(id).innerText = 'X';
-                currentPlayerTurn.innerText = `P2 Turn`;//${playerNames.player2Name}
+                currentPlayerTurn.innerText = `${playerNames.player2Name} Turn`;
                 
             }else{
                 document.getElementById(id).innerText = 'O';
-                currentPlayerTurn.innerText =`P1 Turn`;//${playerNames.player1Name} 
+                currentPlayerTurn.innerText =`${playerNames.player1Name} Turn`;
             }
         }
 
@@ -108,7 +109,8 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
             gameBoard.currentPlayerTurn.innerText = `${Players.player1Name} Wins!`
             reset.resetButton.disabled = false;
-            
+            xCount = 0;
+            oCount = 0;
         }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
         || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
         || document.getElementById(6).innerText === 'O' && document.getElementById(7).innerText === 'O' && document.getElementById(8).innerText === 'O'
@@ -117,22 +119,26 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
-            gameBoard.currentPlayerTurn.innerText = `${player2Name} Wins!`
+            gameBoard.currentPlayerTurn.innerText = `${Players.player2Name} Wins!`
             reset.resetButton.disabled = false;
-        }else if (xCount === 5 && oCount === 4 || xCount === 4 && oCount === 5 ){
+            xCount = 0;
+            oCount = 0;
+        }else if (xCount === 5 && oCount === 4){
             gameBoard.currentPlayerTurn.innerText = "Tie!"
             reset.resetButton.disabled = false;
+            xCount = 0;
+            oCount = 0;
         }
         
     }
 
-    return{compareWin}
+    return{compareWin,checkSign}
 })();
 
 const reset = ((xCount,oCount) => {
     
     let resetButton = document.querySelector('#resetButton')
-    resetButton.disabled = true;
+
     resetButton.addEventListener('click',(e) => {
         resetBoardDisplay();
         resetButton.disabled = true;
@@ -142,11 +148,9 @@ const reset = ((xCount,oCount) => {
         for (let i = 0; i <=8; i++){
             document.getElementById(i).innerText = '';
         }
-        gameBoard.currentPlayerTurn.innerText = `P1 Turn`//${playerNames.player1Name}
+        gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} Turn`
         xCount = 0;
         oCount = 0;
-        console.log(xCount)
-        console.log(oCount)
     }
     return{resetBoardDisplay,resetButton,xCount,oCount}
 })();
