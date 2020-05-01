@@ -1,17 +1,18 @@
 //Factory Functions
-const Players = (player1Name,player2Name) => {
+const Players = () => {
     player1Name = document.getElementById('player1Name').value
     player2Name = document.getElementById('player2Name').value
-    return(player1Name,player2Name)
+    console.log(player1Name)
+    return {player1Name,player2Name}
 }
 //Modules
 
-const gameBoard = ((player2Name,player1Name,xCount,oCount) => {
+const gameBoard = ((xCount,oCount) => {
     'use strict';
     let startButton = document.querySelector('#startButton')
-
+    
     let currentPlayerTurn = document.getElementById('playerTurnText');
-    currentPlayerTurn.innerText = 'P1 Turn'
+    
 
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
     const gridbuttons = gamePlayGrid.querySelectorAll('div');
@@ -24,14 +25,13 @@ const gameBoard = ((player2Name,player1Name,xCount,oCount) => {
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
         
-    startButton.addEventListener('click', (xCount,oCount) => {
+    startButton.addEventListener('click', (player1Name,player2Name) => {
         let playerNames = Players(player1Name,player2Name);
+        currentPlayerTurn.innerText = `${playerNames.player1Name} Turn`
        
         xCount = 0;
         oCount = 0;
-    
-        console.log(playerNames.player1Name)
-        console.log(playerNames.player2Name)// showing as undefined.
+
         if (playerNames.player1Name === undefined || playerNames.player1Name === null 
         || playerNames.player2Name === undefined || playerNames.player2Name === null){
             alert("Please Enter Your Name.")
@@ -107,7 +107,7 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'X' && document.getElementById(5).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(0).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
-            gameBoard.currentPlayerTurn.innerText = `${Players.player1Name} Wins!`
+            gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} Wins!`
             reset.resetButton.disabled = false;
             xCount = 0;
             oCount = 0;
@@ -119,7 +119,7 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
-            gameBoard.currentPlayerTurn.innerText = `${Players.player2Name} Wins!`
+            gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} Wins!`
             reset.resetButton.disabled = false;
             xCount = 0;
             oCount = 0;
@@ -154,7 +154,6 @@ const reset = ((xCount,oCount) => {
     }
     return{resetBoardDisplay,resetButton,xCount,oCount}
 })();
-
 
 
 
