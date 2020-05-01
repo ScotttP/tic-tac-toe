@@ -1,7 +1,69 @@
+//Factory Functions
+const Players = () => {
+    let player1Name = document.getElementById('player1Name').value
+    let player2Name = document.getElementById('player2Name').value
+    return(player1Name,player2Name)
+}
 //Modules
 
-const gamePlay = (() => {
+const gameBoard = (() => {
     'use strict';
+    let startButton = document.querySelector('#startButton')
+
+    let currentPlayerTurn = document.getElementById('playerTurnText');
+    currentPlayerTurn.innerText = 'Player 1 Turn'
+
+    const gamePlayGrid = document.querySelector('.gamePlayGrid');
+    const gridbuttons = gamePlayGrid.querySelectorAll('div');
+    
+    let currentGameBoard = ['','','','','','','','',''];
+    const _winningCombinations = [
+        ['0','1','2','','','','','',''],['','','','3','4','5','','',''],
+        ['','','','','','','6','7','8'],['0','','','3','','','6','',''],
+        ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
+        ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
+    ];
+
+    
+    startButton.addEventListener('click', () => {
+        let playerNames = Players();
+        console.log(playerNames.player1Name)// showings as undefined.
+        gridbuttons.forEach((div) => {
+        div.addEventListener('click', () => {
+            let id = div.id;
+            render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
+            updateGameboard(id);
+            })
+        })
+    })
+
+    function updateGameboard (id) {
+        currentGameBoard.splice(id,1,id);
+        //if the X count is >= 3 or O count is >= 3, call compare win function.
+        gamePlay.compareWin(currentGameBoard,_winningCombinations);
+    }
+    
+    function render (id,currentPlayerTurn,playerNames) {
+        document.getElementById(id).innerText === '';
+        if (document.getElementById(id).innerText=== ''){
+            if (currentPlayerTurn.innerText === `${playerNames.player1Name} Turn`){
+                document.getElementById(id).innerText = 'X';
+                currentPlayerTurn.innerText = `${playerNames.player2Name} Turn`;
+                
+            }else{
+                document.getElementById(id).innerText = 'O';
+                currentPlayerTurn.innerText =`${playerNames.player1Name} Turn`;
+            }
+        }
+
+    }
+
+    return {updateGameboard,render,currentPlayerTurn,currentGameBoard}
+})();
+
+const gamePlay = ((player2Name) => {
+    'use strict';
+
     function compareWin (currentGameBoard,_winningCombinations) {
         if (currentGameBoard.includes(_winningCombinations[0][0,1,2]) 
         || currentGameBoard.includes(_winningCombinations[1][3,4,5]) 
@@ -34,7 +96,7 @@ const gamePlay = (() => {
         || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
         || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
-            gameBoard.currentPlayerTurn.innerText = `${Players.player2Name} Wins!`
+            gameBoard.currentPlayerTurn.innerText = `${player2Name} Wins!`
             reset.resetButton.disabled = false;
         }else{
             
@@ -43,54 +105,6 @@ const gamePlay = (() => {
     }
 
     return{compareWin}
-})();
-
-const gameBoard = (() => {
-    'use strict';
-    
-    let currentPlayerTurn = document.getElementById('playerTurnText');
-    currentPlayerTurn.innerText = 'Player 1 Turn'
-
-    const gamePlayGrid = document.querySelector('.gamePlayGrid');
-    const gridbuttons = gamePlayGrid.querySelectorAll('div');
-    
-    let currentGameBoard = ['','','','','','','','',''];
-    const _winningCombinations = [
-        ['0','1','2','','','','','',''],['','','','3','4','5','','',''],
-        ['','','','','','','6','7','8'],['0','','','3','','','6','',''],
-        ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
-        ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
-    ];
-    
-    gridbuttons.forEach((div) => {
-        div.addEventListener('click', () => {
-            let id = div.id;
-            render(id,currentPlayerTurn)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
-            updateGameboard(id);
-        })
-    })
-    function updateGameboard (id) {
-        currentGameBoard.splice(id,1,id);
-        //if the X count is >= 3 or O count is >= 3, call compare win function.
-        gamePlay.compareWin(currentGameBoard,_winningCombinations);
-    }
-    
-    function render (id,currentPlayerTurn) {
-        document.getElementById(id).innerText === '';
-        if (document.getElementById(id).innerText=== ''){
-            if (currentPlayerTurn.innerText ==='Player 1 Turn'){
-                document.getElementById(id).innerText = 'X';
-                currentPlayerTurn.innerText = 'Player 2 Turn';
-                
-            }else{
-                document.getElementById(id).innerText = 'O';
-                currentPlayerTurn.innerText ='Player 1 Turn';
-            }
-        }
-
-    }
-
-    return {updateGameboard,render,currentPlayerTurn,currentGameBoard}
 })();
 
 const reset = (() => {
@@ -106,23 +120,13 @@ const reset = (() => {
         for (let i = 0; i <=8; i++){
             document.getElementById(i).innerText = '';
         }
-        gameBoard.currentPlayerTurn.innerText = 'Player 1 Turn'
-        console.log(Players.player1Name)
+        gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} Turn`
+        
     }
     return{resetBoardDisplay,resetButton}
 })();
 
-//Factory Functions
 
-const Players = () => {
-    let startButton = document.querySelector('#startButton')
-    startButton.addEventListener('click', () => {
-        player1Name = document.getElementById('player1Name').value
-        player2Name = document.getElementById('player2Name').value
-    })
-    
-    return{player1Name,player2Name}
-}
 
 
 
