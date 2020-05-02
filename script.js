@@ -2,7 +2,7 @@
 const Players = () => {
     player1Name = document.getElementById('player1Name').value
     player2Name = document.getElementById('player2Name').value
-    console.log(player1Name)
+    
     return {player1Name,player2Name}
 }
 //Modules
@@ -12,7 +12,7 @@ const gameBoard = ((xCount,oCount) => {
     let startButton = document.querySelector('#startButton')
     
     let currentPlayerTurn = document.getElementById('playerTurnText');
-    
+    let playerNames;
 
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
     const gridbuttons = gamePlayGrid.querySelectorAll('div');
@@ -24,18 +24,23 @@ const gameBoard = ((xCount,oCount) => {
         ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
+
+    startButton.addEventListener('click', () => {
+        playerNames = Players(player1Name,player2Name);
         
-    startButton.addEventListener('click', (player1Name,player2Name) => {
-        let playerNames = Players(player1Name,player2Name);
-        currentPlayerTurn.innerText = `${playerNames.player1Name} Turn`
-       
         xCount = 0;
         oCount = 0;
-
-        if (playerNames.player1Name === undefined || playerNames.player1Name === null 
-        || playerNames.player2Name === undefined || playerNames.player2Name === null){
+        
+        
+        if (playerNames.player1Name === undefined || playerNames.player1Name === '' 
+        || playerNames.player2Name === undefined || playerNames.player2Name === ''){
             alert("Please Enter Your Name.")
         }else{
+            startButton.disabled = true;
+            reset.resetButton.disabled = true;
+
+            currentPlayerTurn.innerText = `${playerNames.player1Name} Turn`
+
             gridbuttons.forEach((div) => {
                 div.addEventListener('click', () => {
                     let id = div.id;
@@ -47,23 +52,23 @@ const gameBoard = ((xCount,oCount) => {
                         }else{
                             ++oCount
                         }
-                    updateGameboard(id,xCount,oCount);
+                    updateGameboard(id,xCount,oCount,playerNames);
                     
                     })
                 })
             }
     })
 
-    function updateGameboard (id,xCount,oCount) {
+    function updateGameboard (id,xCount,oCount,playerNames) {
         currentGameBoard.splice(id,1,id);
         if (xCount >= 3 || oCount >= 3){
-         gamePlay.compareWin(currentGameBoard,_winningCombinations,xCount,oCount);
+         gamePlay.compareWin(currentGameBoard,_winningCombinations,xCount,oCount,playerNames);
         }
        
         
     }
     
-    function render (id,currentPlayerTurn,playerNames) {
+    function render (id,currentPlayerTurn) {
         document.getElementById(id).innerText === '';
         if (document.getElementById(id).innerText=== ''){
             if (currentPlayerTurn.innerText === `${playerNames.player1Name} Turn`){
@@ -77,16 +82,13 @@ const gameBoard = ((xCount,oCount) => {
         }
 
     }
-     
-    // }
-
-    return {updateGameboard,render,currentPlayerTurn,currentGameBoard,xCount,oCount}
+    return {updateGameboard,render,currentPlayerTurn,currentGameBoard,xCount,oCount,playerNames,player1Name,player2Name,startButton}
 })();
 
 const gamePlay = (() => {
     'use strict';
 
-    function compareWin (currentGameBoard,_winningCombinations,xCount,oCount) {
+    function compareWin (currentGameBoard,_winningCombinations,xCount,oCount,playerNames) {
         if (currentGameBoard.includes(_winningCombinations[0][0,1,2]) 
         || currentGameBoard.includes(_winningCombinations[1][3,4,5]) 
         || currentGameBoard.includes(_winningCombinations[2][6,7,8]) 
@@ -94,11 +96,11 @@ const gamePlay = (() => {
         || currentGameBoard.includes(_winningCombinations[4][1,4,7]) 
         || currentGameBoard.includes(_winningCombinations[5][2,5,8]) 
         || currentGameBoard.includes(_winningCombinations[6][0,4,8])
-        || currentGameBoard.includes(_winningCombinations[7][2,4,6])  ){
-            checkSign(xCount,oCount);
+        || currentGameBoard.includes(_winningCombinations[7][2,4,6])){
+            checkSign(xCount,oCount,playerNames);
             }
     }
-    function checkSign(xCount,oCount) { 
+    function checkSign(xCount,oCount,playerNames) { 
         if(document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
         || document.getElementById(3).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(5).innerText === 'X'
         || document.getElementById(6).innerText === 'X' && document.getElementById(7).innerText === 'X' && document.getElementById(8).innerText === 'X'
@@ -135,24 +137,29 @@ const gamePlay = (() => {
     return{compareWin,checkSign}
 })();
 
-const reset = ((xCount,oCount) => {
-    
-    let resetButton = document.querySelector('#resetButton')
+const reset = ((xCount,oCount,playerNames) => {
+    playerNames = Players(player1Name,player2Name);
 
+    let resetButton = document.querySelector('#resetButton')
+    
     resetButton.addEventListener('click',(e) => {
-        resetBoardDisplay();
-        resetButton.disabled = true;
-    })
-    function resetBoardDisplay(){
         gameBoard.currentGameBoard = ['','','','','','','','',''];
         for (let i = 0; i <=8; i++){
             document.getElementById(i).innerText = '';
         }
-        gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} Turn`
+        
+        document.getElementById('player1Name').value = '';
+        document.getElementById('player2Name').value = '';
+        playerNames.player1Name = '';
+        playerNames.player2Name = '';
+        gameBoard.currentPlayerTurn.innerText = '';
         xCount = 0;
         oCount = 0;
-    }
-    return{resetBoardDisplay,resetButton,xCount,oCount}
+        resetButton.disabled = true;
+        gameBoard.startButton.disabled = false;
+    })
+    
+    return{resetButton,xCount,oCount,playerNames}
 })();
 
 
