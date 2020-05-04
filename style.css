@@ -1,11 +1,17 @@
 body{
-    background-color: white;
+    background-color: rgba(31, 66, 135, 0.2);
     font-family: 'Ubuntu', sans-serif;
+    
 }
 button{
     background-color: white;
     color: #17b89a;
     border: 1px solid #17b89a;
+    border-radius: 25px;
+    min-width: 70px;
+    min-height: 30px;
+    width: 5vw;
+    height: 3vh;
     transition: .5s;
 }
 button:hover{
@@ -15,9 +21,37 @@ button:hover{
     border: 1px solid #071e3d;
     transform: scale(1.1);
 }
+button:disabled{
+    background-color: #dad8d8;
+    border: 1px solid #646464;
+    color: white;
+}
+form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+}
+@media (max-width: 375px){
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1em;
+    }
+
+}
 input{
     border: 1px solid #17b89a;
     transition: .5s;
+    margin: 1em;
+    height: 1.5rem;
+    border-radius: 15px;
+    padding: 2px;
+}
+h1{
+    text-align: center;
 }
 input:focus{
     outline: none;
@@ -46,15 +80,15 @@ input:hover{
     align-self: center;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    min-width: 400px;
+    min-width: 350px;
     min-height: 400px;
     max-height: 500px;
     max-width: 500px;
     height: 50vh;
     width: 40vw; 
     margin: 5px;
-    margin-top: 5em;
-    
+    margin-top: 2em;
+    box-shadow: 0px 0px 0px 10px #17b89a;
 }
 
 .gamePlayGrid > div {
@@ -84,4 +118,8 @@ input:hover{
 }
 #playerTurnText{
     color: #071e3d;
+    padding: 1rem;
+}
+#resetButton {
+    margin-top: 2em;
 }
