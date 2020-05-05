@@ -12,7 +12,8 @@ const Players = () => {
 
 const gameBoard = (() => {
     'use strict';
-    let startButton = document.querySelector('#startButton')
+    let startButton = document.querySelector('#startButton');
+    let resetButton = document.querySelector('#resetButton');
     
     let currentPlayerTurn = document.getElementById('playerTurnText');
     let playerNames;
@@ -54,8 +55,8 @@ const gameBoard = (() => {
                         alert("Please Enter Your Name.")
                         return
                     }
-                    console.log(xCount)
-                    console.log(oCount)
+                    console.log(`Current X Count: ${xCount}`)
+                    console.log(`Current O Count: ${oCount}`)
                     render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
                         if (document.getElementById(id).innerText === 'X'){
                             xCount += 1
@@ -92,8 +93,7 @@ const gameBoard = (() => {
         }
 
     }
-    let resetButton = document.querySelector('#resetButton');
-   
+    
     resetButton.addEventListener('click',(e) => {
         playerNames = Players(player1Name,player2Name);
         currentGameBoard = ['','','','','','','','',''];
