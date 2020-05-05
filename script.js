@@ -9,12 +9,16 @@ const Players = () => {
 }
 //Modules
 
-const gameBoard = ((xCount,oCount) => {
+
+const gameBoard = (() => {
     'use strict';
     let startButton = document.querySelector('#startButton')
     
     let currentPlayerTurn = document.getElementById('playerTurnText');
     let playerNames;
+
+    let xCount;
+    let oCount;
 
     const gamePlayGrid = document.querySelector('.gamePlayGrid');
     const gridbuttons = gamePlayGrid.querySelectorAll('div');
@@ -26,45 +30,49 @@ const gameBoard = ((xCount,oCount) => {
         ['','1','','','4','','','7',''],['','','2','','','5','','','8'],
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
-
+    
     startButton.addEventListener('click', () => {
         playerNames = Players(player1Name,player2Name);
         
         xCount = 0;
         oCount = 0;
-        
-        
+
         if (playerNames.player1Name === undefined || playerNames.player1Name === '' 
         || playerNames.player2Name === undefined || playerNames.player2Name === ''){
             alert("Please Enter Your Name.")
+            return
         }else{
             startButton.disabled = true;
-            reset.resetButton.disabled = true;
+            resetButton.disabled = true;
 
             currentPlayerTurn.innerText = `${playerNames.player1Name} TURN`
 
             gridbuttons.forEach((div) => {
                 div.addEventListener('click', () => {
                     let id = div.id;
+                    if (playerNames.player1Name === '' || playerNames.player2Name === ''){
+                        alert("Please Enter Your Name.")
+                        return
+                    }
                     console.log(xCount)
                     console.log(oCount)
                     render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
                         if (document.getElementById(id).innerText === 'X'){
-                            ++xCount 
+                            xCount += 1
                         }else{
-                            ++oCount
+                            oCount += 1
                         }
-                    updateGameboard(id,xCount,oCount,playerNames);
+                    updateGameboard(id,playerNames);
                     
                     })
                 })
             }
     })
 
-    function updateGameboard (id,xCount,oCount,playerNames) {
+    function updateGameboard (id,playerNames) {
         currentGameBoard.splice(id,1,id);
         if (xCount >= 3 || oCount >= 3){
-         gamePlay.compareWin(currentGameBoard,_winningCombinations,xCount,oCount,playerNames);
+         gamePlay.compareWin(currentGameBoard,_winningCombinations,playerNames);
         }
        
         
@@ -84,68 +92,11 @@ const gameBoard = ((xCount,oCount) => {
         }
 
     }
-    return {updateGameboard,render,currentPlayerTurn,currentGameBoard,xCount,oCount,playerNames,player1Name,player2Name,startButton}
-})();
-
-const gamePlay = (() => {
-    'use strict';
-
-    function compareWin (currentGameBoard,_winningCombinations,xCount,oCount,playerNames) {
-        if (currentGameBoard.includes(_winningCombinations[0][0,1,2]) 
-        || currentGameBoard.includes(_winningCombinations[1][3,4,5]) 
-        || currentGameBoard.includes(_winningCombinations[2][6,7,8]) 
-        || currentGameBoard.includes(_winningCombinations[3][0,3,6]) 
-        || currentGameBoard.includes(_winningCombinations[4][1,4,7]) 
-        || currentGameBoard.includes(_winningCombinations[5][2,5,8]) 
-        || currentGameBoard.includes(_winningCombinations[6][0,4,8])
-        || currentGameBoard.includes(_winningCombinations[7][2,4,6])){
-            checkSign(xCount,oCount,playerNames);
-            }
-    }
-    function checkSign(xCount,oCount,playerNames) { 
-        if(document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
-        || document.getElementById(3).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(5).innerText === 'X'
-        || document.getElementById(6).innerText === 'X' && document.getElementById(7).innerText === 'X' && document.getElementById(8).innerText === 'X'
-        || document.getElementById(0).innerText === 'X' && document.getElementById(3).innerText === 'X' && document.getElementById(6).innerText === 'X'
-        || document.getElementById(1).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(7).innerText === 'X'
-        || document.getElementById(2).innerText === 'X' && document.getElementById(5).innerText === 'X' && document.getElementById(8).innerText === 'X'
-        || document.getElementById(0).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(8).innerText === 'X'
-        || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
-            gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} WINS!`
-            reset.resetButton.disabled = false;
-            xCount = 0;
-            oCount = 0;
-        }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
-        || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
-        || document.getElementById(6).innerText === 'O' && document.getElementById(7).innerText === 'O' && document.getElementById(8).innerText === 'O'
-        || document.getElementById(0).innerText === 'O' && document.getElementById(3).innerText === 'O' && document.getElementById(6).innerText === 'O'
-        || document.getElementById(1).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(7).innerText === 'O'
-        || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
-        || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
-        || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
-            gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} WINS!`
-            reset.resetButton.disabled = false;
-            xCount = 0;
-            oCount = 0;
-        }else if (xCount === 5 && oCount === 4){
-            gameBoard.currentPlayerTurn.innerText = "TIE!"
-            reset.resetButton.disabled = false;
-            xCount = 0;
-            oCount = 0;
-        }
-        
-    }
-
-    return{compareWin,checkSign}
-})();
-
-const reset = ((xCount,oCount,playerNames) => {
-    playerNames = Players(player1Name,player2Name);
-
-    let resetButton = document.querySelector('#resetButton')
-    
+    let resetButton = document.querySelector('#resetButton');
+   
     resetButton.addEventListener('click',(e) => {
-        gameBoard.currentGameBoard = ['','','','','','','','',''];
+        playerNames = Players(player1Name,player2Name);
+        currentGameBoard = ['','','','','','','','',''];
         for (let i = 0; i <=8; i++){
             document.getElementById(i).innerText = '';
         }
@@ -158,11 +109,74 @@ const reset = ((xCount,oCount,playerNames) => {
         xCount = 0;
         oCount = 0;
         resetButton.disabled = true;
-        gameBoard.startButton.disabled = false;
+        startButton.disabled = false;
     })
-    
-    return{resetButton,xCount,oCount,playerNames}
+
+    return {
+        currentPlayerTurn,
+        currentGameBoard,
+        xCount,
+        oCount,
+        startButton,
+        resetButton}
 })();
+
+const gamePlay = (() => {
+    'use strict';
+
+    function compareWin (currentGameBoard,_winningCombinations,playerNames) {
+        if (currentGameBoard.includes(_winningCombinations[0][0,1,2]) 
+        || currentGameBoard.includes(_winningCombinations[1][3,4,5]) 
+        || currentGameBoard.includes(_winningCombinations[2][6,7,8]) 
+        || currentGameBoard.includes(_winningCombinations[3][0,3,6]) 
+        || currentGameBoard.includes(_winningCombinations[4][1,4,7]) 
+        || currentGameBoard.includes(_winningCombinations[5][2,5,8]) 
+        || currentGameBoard.includes(_winningCombinations[6][0,4,8])
+        || currentGameBoard.includes(_winningCombinations[7][2,4,6])){
+            checkSign(playerNames);
+            }
+    }
+    function checkSign(playerNames) { 
+        if(document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
+        || document.getElementById(3).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(5).innerText === 'X'
+        || document.getElementById(6).innerText === 'X' && document.getElementById(7).innerText === 'X' && document.getElementById(8).innerText === 'X'
+        || document.getElementById(0).innerText === 'X' && document.getElementById(3).innerText === 'X' && document.getElementById(6).innerText === 'X'
+        || document.getElementById(1).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(7).innerText === 'X'
+        || document.getElementById(2).innerText === 'X' && document.getElementById(5).innerText === 'X' && document.getElementById(8).innerText === 'X'
+        || document.getElementById(0).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(8).innerText === 'X'
+        || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
+            gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} WINS!`
+            gameBoard.xCount = 0
+            gameBoard.oCount = 0;
+            resetButton.disabled = false;
+            
+        }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
+        || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
+        || document.getElementById(6).innerText === 'O' && document.getElementById(7).innerText === 'O' && document.getElementById(8).innerText === 'O'
+        || document.getElementById(0).innerText === 'O' && document.getElementById(3).innerText === 'O' && document.getElementById(6).innerText === 'O'
+        || document.getElementById(1).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(7).innerText === 'O'
+        || document.getElementById(2).innerText === 'O' && document.getElementById(5).innerText === 'O' && document.getElementById(8).innerText === 'O'
+        || document.getElementById(0).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(8).innerText === 'O'
+        || document.getElementById(2).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(6).innerText === 'O'){
+            gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} WINS!`
+            gameBoard.xCount = 0
+            gameBoard.oCount = 0;
+            resetButton.disabled = false;
+            
+            
+        }else if (gameBoard.xCount >= 5 && gameBoard.oCount >= 4){
+            gameBoard.currentPlayerTurn.innerText = "TIE!"
+            gameBoard.xCount = 0
+            gameBoard.oCount = 0;
+            resetButton.disabled = false;
+           
+        }
+        
+    }
+    
+    return{compareWin,checkSign}
+})();
+
 
 
 
