@@ -52,27 +52,27 @@ const gameBoard = (() => {
                 currentPlayerTurn.innerText = `${playerNames.player1Name} TURN`
 
                 gridbuttons.forEach((div) => {//calls the functions when clicked on a square
-                    div.addEventListener('click', function addFunctions() { //adds the render,updategameboard functions and is called when clicked on
+                    div.addEventListener('click', addFunctions,false)
+                    function addFunctions() { //adds the render,updategameboard functions and is called when clicked on
                         let id = div.id;
                         if (playerNames.player1Name === '' || playerNames.player2Name === ''){
                             alert("Please Enter Your Name.")
                             return
                         }
-                    
-                    render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
-                        
-                    if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
-                            ++xCount
-                    }
-                    if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
-                            ++oCount
-                    }
+                        render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
+                            
+                        if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
+                                ++xCount
+                        }
+                        if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
+                                ++oCount
+                        }
 
-                    updateGameboard(id,playerNames);
-                    console.log(`Current X Count: ${xCount}`)
-                    console.log(`Current O Count: ${oCount}`)
-                    div.removeEventListener('click',addFunctions,false) 
-                    })
+                        updateGameboard(id,playerNames);
+                        console.log(`Current X Count: ${xCount}`)
+                        console.log(`Current O Count: ${oCount}`)
+                        div.removeEventListener('click', addFunctions,false) 
+                    }
                     
                 })
         
