@@ -58,20 +58,24 @@ const gameBoard = (() => {
                         if (playerNames.player1Name === '' || playerNames.player2Name === ''){
                             alert("Please Enter Your Name.")
                             return
-                        }
+                        }else{
                         render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
                             
                         if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
-                                ++xCount
+                            ++xCount
+                            console.log(document.getElementById(id).innerText)
+                                
                         }
                         if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
-                                ++oCount
+                            ++oCount
+                            console.log(document.getElementById(id).innerText)
                         }
 
                         updateGameboard(id,playerNames);
                         console.log(`Current X Count: ${xCount}`)
                         console.log(`Current O Count: ${oCount}`)
                         div.removeEventListener('click', addFunctions,false) 
+                    }
                     }
                     
                 })
@@ -108,12 +112,13 @@ const gameBoard = (() => {
     function reset () {
         playerNames = Players(player1Name,player2Name);//makes the player names available
         
+        gameBoard.currentGameBoard = ['','','','','','','','',''];
         currentGameBoard = ['','','','','','','','',''];
         for (let i = 0; i <=8; i++){
             document.getElementById(i).innerText = '';
         }
 
-        document.getElementById('player1Name').value = ''; 
+        document.getElementById('player1Name').value = '';
         document.getElementById('player2Name').value = '';
         player1Name = '';
         player2Name = '';
@@ -123,7 +128,7 @@ const gameBoard = (() => {
         xCount = 0;
         oCount = 0;
         resetButton.disabled = true;
-        resetButton.removeEventListener('click', reset, false) 
+        //resetButton.removeEventListener('click', reset, false) 
         startButton.disabled = false;
         startButton.addEventListener('click', initialStart, false) // adds the start listener back since the game ended.
     }
@@ -162,10 +167,11 @@ const gamePlay = (() => {
         || document.getElementById(0).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(8).innerText === 'X'
         || document.getElementById(2).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(6).innerText === 'X'){
             gameBoard.currentPlayerTurn.innerText = `${playerNames.player1Name} WINS!`
-            xCount = 0
+            xCount = 0;
             oCount = 0;
             resetButton.disabled = false;
             startButton.disabled = false;
+            
             
         }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
         || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
@@ -180,6 +186,7 @@ const gamePlay = (() => {
             oCount = 0;
             resetButton.disabled = false;
             startButton.disabled = false;
+           
 
         }else if (xCount === 5 && oCount === 4 || xCount === 4 && oCount === 5){
             gameBoard.currentPlayerTurn.innerText = "TIE!"
@@ -187,6 +194,7 @@ const gamePlay = (() => {
             oCount = 0;
             resetButton.disabled = false;
             startButton.disabled = false;
+            
         }
         
     }
