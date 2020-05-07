@@ -53,41 +53,44 @@ const gameBoard = (() => {
 
                 gridbuttons.forEach((div) => {//calls the functions when clicked on a square
                     div.addEventListener('click', addFunctions,false)
+
                     function addFunctions() { //adds the render,updategameboard functions and is called when clicked on
                         let id = div.id;
                         if (playerNames.player1Name === '' || playerNames.player2Name === ''){
                             alert("Please Enter Your Name.")
                             return
                         }else{
-                        render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
-                            
-                        if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
-                            ++xCount
-                            console.log(document.getElementById(id).innerText)
-                                
-                        }
-                        if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
-                            ++oCount
-                            console.log(document.getElementById(id).innerText)
-                        }
 
-                        updateGameboard(id,playerNames);
-                        console.log(`Current X Count: ${xCount}`)
-                        console.log(`Current O Count: ${oCount}`)
-                        div.removeEventListener('click', addFunctions,false) 
+                            render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
+                                
+                            if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
+                                ++xCount
+                                console.log(document.getElementById(id).innerText)
+                                    
+                            }
+                            if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
+                                ++oCount
+                                console.log(document.getElementById(id).innerText)
+                            }
+
+                            updateGameboard(id,playerNames,div);
+                            console.log(`Current X Count: ${xCount}`)
+                            console.log(`Current O Count: ${oCount}`)
+                        
                     }
+                    div.removeEventListener('click', addFunctions,false) 
                     }
                     
                 })
         
         }
-        startButton.removeEventListener('click',initialStart,false) // removes the initital start fucntion
+        //startButton.removeEventListener('click',initialStart,false) // removes the initital start fucntion
     }
     
-    function updateGameboard (id,playerNames) {
+    function updateGameboard (id,playerNames,div) {
         currentGameBoard.splice(id,1,id);
         if (xCount >= 3 || oCount >= 3){
-            gamePlay.compareWin(currentGameBoard,_winningCombinations,playerNames,xCount,oCount) //calls compare win function in the 
+            gamePlay.compareWin(currentGameBoard,_winningCombinations,playerNames,xCount,oCount,div) //calls compare win function in the 
         }
     }
     
@@ -130,7 +133,7 @@ const gameBoard = (() => {
         resetButton.disabled = true;
         //resetButton.removeEventListener('click', reset, false) 
         startButton.disabled = false;
-        startButton.addEventListener('click', initialStart, false) // adds the start listener back since the game ended.
+        //startButton.addEventListener('click', initialStart, false) // adds the start listener back since the game ended.
     }
     
     return {
@@ -145,7 +148,7 @@ const gameBoard = (() => {
 const gamePlay = (() => {
     'use strict';
 
-    function compareWin (currentGameBoard,_winningCombinations,playerNames,xCount,oCount) {
+    function compareWin (currentGameBoard,_winningCombinations,playerNames,xCount,oCount,div) {
         if (currentGameBoard.includes(_winningCombinations[0][0,1,2]) 
         || currentGameBoard.includes(_winningCombinations[1][3,4,5]) 
         || currentGameBoard.includes(_winningCombinations[2][6,7,8]) 
@@ -154,10 +157,10 @@ const gamePlay = (() => {
         || currentGameBoard.includes(_winningCombinations[5][2,5,8]) 
         || currentGameBoard.includes(_winningCombinations[6][0,4,8])
         || currentGameBoard.includes(_winningCombinations[7][2,4,6])){
-            checkSign(playerNames,xCount,oCount);
+            checkSign(playerNames,xCount,oCount,div);
             }
     }
-    function checkSign(playerNames,xCount,oCount) { 
+    function checkSign(playerNames,xCount,oCount,div) { 
         if(document.getElementById(0).innerText === 'X' && document.getElementById(1).innerText === 'X' && document.getElementById(2).innerText === 'X'
         || document.getElementById(3).innerText === 'X' && document.getElementById(4).innerText === 'X' && document.getElementById(5).innerText === 'X'
         || document.getElementById(6).innerText === 'X' && document.getElementById(7).innerText === 'X' && document.getElementById(8).innerText === 'X'
@@ -171,7 +174,7 @@ const gamePlay = (() => {
             oCount = 0;
             resetButton.disabled = false;
             startButton.disabled = false;
-            
+
             
         }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
         || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
