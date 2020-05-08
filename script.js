@@ -31,20 +31,22 @@ const gameBoard = (() => {
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
     
-startButton.addEventListener('click', () => {
-    initialStart()
-})
-resetButton.addEventListener('click', () => {
-    reset()
-})
-gridbuttons.forEach(div => {
-    let id = div.id;
-    div.addEventListener('click', () => {
-        addFunctions(id)
-        })
+    startButton.addEventListener('click', () => {
+        settingNamesAndMarkerCount()
     })
+    resetButton.addEventListener('click', () => {
+        reset()
+    })
+    gridbuttons.forEach(div => {
+        let id = div.id;
+        div.addEventListener('click', () => {// this adds the render function and updateGameboard function
+            if (document.getElementById(id).innerText === ''){
+                getUpdateFunctions(id)
+                }
+            })
+        })
     
-    function initialStart() {
+    function settingNamesAndMarkerCount() {
         playerNames = Players(player1Name,player2Name);
     
         xCount = 0;
@@ -62,17 +64,13 @@ gridbuttons.forEach(div => {
         }
     }
       
-    function addFunctions(id) { //calls the render,updategameboard functions and is called when clicked on
+    function getUpdateFunctions(id) { //calls the render,updategameboard functions and is called when clicked on
     
     render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
         if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
-            ++xCount
-            console.log(document.getElementById(id).innerText)
-                
-        }
-        if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
+            ++xCount 
+        }else if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
             ++oCount
-            console.log(document.getElementById(id).innerText)
         }
     updateGameboard(id,playerNames);
     }
@@ -97,29 +95,28 @@ gridbuttons.forEach(div => {
     function reset () {
         playerNames = Players(player1Name,player2Name);//makes the player names available
         
+        gameBoard.currentPlayerTurn.innerText = '';
         gameBoard.currentGameBoard = ['','','','','','','','',''];
         currentGameBoard = ['','','','','','','','',''];
+
         for (let i = 0; i <=8; i++){
             document.getElementById(i).innerText = '';
         }
+
         document.getElementById('player1Name').value = '';
         document.getElementById('player2Name').value = '';
-        player1Name = '';
-        player2Name = '';
-        playerNames.player1Name = '';
-        playerNames.player2Name = '';
-        gameBoard.currentPlayerTurn.innerText = '';
         xCount = 0;
         oCount = 0;
         resetButton.disabled = true;
         startButton.disabled = false;
+
         // removal of listeners. prevents the functions from being repeated when the reset button is clicked.
         startButton.removeEventListener('click', () => {
-            initialStart(); 
+            settingNamesAndMarkerCount(); 
         })  
         gridbuttons.forEach(div => {
             div.removeEventListener('click', () => {
-                addFunctions();
+                getUpdateFunctions();
             })
         })
         resetButton.removeEventListener('click', () => {
@@ -127,8 +124,6 @@ gridbuttons.forEach(div => {
         })
         
     }
-
-    
     return {
         currentPlayerTurn,
         currentGameBoard,
@@ -168,8 +163,6 @@ const gamePlay = (() => {
             oCount = 0;
             resetButton.disabled = false;
             startButton.disabled = false;
-
-            
         }else if (document.getElementById(0).innerText === 'O' && document.getElementById(1).innerText === 'O' && document.getElementById(2).innerText === 'O'
         || document.getElementById(3).innerText === 'O' && document.getElementById(4).innerText === 'O' && document.getElementById(5).innerText === 'O'
         || document.getElementById(6).innerText === 'O' && document.getElementById(7).innerText === 'O' && document.getElementById(8).innerText === 'O'
@@ -183,8 +176,6 @@ const gamePlay = (() => {
             oCount = 0;
             resetButton.disabled = false;
             startButton.disabled = false;
-           
-
         }else if(xCount === 5 && oCount === 4 || xCount === 4 && oCount === 5){
             gameBoard.currentPlayerTurn.innerText = "TIE!"
             xCount = 0;
