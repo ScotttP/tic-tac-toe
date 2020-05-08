@@ -66,13 +66,13 @@ const gameBoard = (() => {
       
     function getUpdateFunctions(id) { //calls the render,updategameboard functions and is called when clicked on
     
-    render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
+        render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
         if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
             ++xCount 
         }else if (document.getElementById(id).innerText === 'O'){//if the grid at a certain id contains an O, increase the count of O.
             ++oCount
         }
-    updateGameboard(id,playerNames);
+        updateGameboard(id,playerNames);
     }
     
     function updateGameboard (id,playerNames) {
