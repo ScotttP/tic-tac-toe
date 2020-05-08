@@ -14,15 +14,14 @@ const gameBoard = (() => {
     'use strict';
     let startButton = document.querySelector('#startButton');
     let resetButton = document.querySelector('#resetButton');
-    
+    const gamePlayGrid = document.querySelector('.gamePlayGrid');
+    const gridbuttons = gamePlayGrid.querySelectorAll('div');
+
     let currentPlayerTurn = document.getElementById('playerTurnText');
     let playerNames;
 
     let xCount;
     let oCount;
-
-    const gamePlayGrid = document.querySelector('.gamePlayGrid');
-    const gridbuttons = gamePlayGrid.querySelectorAll('div');
     
     let currentGameBoard = ['','','','','','','','',''];
     const _winningCombinations = [
@@ -32,50 +31,40 @@ const gameBoard = (() => {
         ['0','','','','4','','','','8'],['','','2','','4','','6','',''],
     ];
     
-
-    
 startButton.addEventListener('click', () => {
     initialStart()
-    startButton.removeEventListener('click', () => {
-        initialStart()
-    })    
 })
+resetButton.addEventListener('click', () => {
+    reset()
+})
+gridbuttons.forEach(div => {
+    let id = div.id;
+    div.addEventListener('click', () => {
+        addFunctions(id)
+        })
+    })
     
     function initialStart() {
         playerNames = Players(player1Name,player2Name);
-        resetButton.addEventListener('click', reset, false)
-
+    
         xCount = 0;
         oCount = 0;
         
         startButton.disabled = true;
         resetButton.disabled = false;
-
         
         if (playerNames.player1Name === '' || playerNames.player2Name === ''){
             alert("Please Enter Your Name.")
             return
         }else{
         currentPlayerTurn.innerText = `${playerNames.player1Name} TURN`
-        gridbuttons.forEach(div => {
-            let id = div.id;
-            div.addEventListener('click', () => {
-                addFunctions(id)
-                })
-            div.removeEventListener('click', () =>{
-                addFunctions(id)
-                })
-            })
+
         }
-        startButton.removeEventListener('click', () => {
-            initialStart()
-        })    
     }
       
-       function addFunctions(id) { //adds the render,updategameboard functions and is called when clicked on
-        
-        render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
-            
+    function addFunctions(id) { //calls the render,updategameboard functions and is called when clicked on
+    
+    render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
         if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
             ++xCount
             console.log(document.getElementById(id).innerText)
@@ -85,48 +74,12 @@ startButton.addEventListener('click', () => {
             ++oCount
             console.log(document.getElementById(id).innerText)
         }
-
-        updateGameboard(id,playerNames);
-        console.log(`Current X Count: ${xCount}`)
-        console.log(`Current O Count: ${oCount}`)
-        }
-
-    function reset () {
-        playerNames = Players(player1Name,player2Name);//makes the player names available
-        
-        gameBoard.currentGameBoard = ['','','','','','','','',''];
-        currentGameBoard = ['','','','','','','','',''];
-        for (let i = 0; i <=8; i++){
-            document.getElementById(i).innerText = '';
-        }
-
-        document.getElementById('player1Name').value = '';
-        document.getElementById('player2Name').value = '';
-        player1Name = '';
-        player2Name = '';
-        playerNames.player1Name = '';
-        playerNames.player2Name = '';
-        gameBoard.currentPlayerTurn.innerText = '';
-        xCount = 0;
-        oCount = 0;
-        resetButton.disabled = true;
-        startButton.disabled = false;
-
-        resetButton.removeEventListener('click', reset) 
-        startButton.removeEventListener('click', () => {
-            initialStart()
-        })     // adds the start listener back since the game ended.
-        gridbuttons.forEach(div => {
-            div.removeEventListener('click', addFunctions)
-        })
-        
+    updateGameboard(id,playerNames);
     }
-
     
     function updateGameboard (id,playerNames) {
         currentGameBoard.splice(id,1,id);
         gamePlay.compareWin(currentGameBoard,_winningCombinations,playerNames,xCount,oCount) //calls compare win function in the 
-        
     }
     
     function render (id,currentPlayerTurn,playerNames) {//toggle function between player turn
@@ -141,7 +94,39 @@ startButton.addEventListener('click', () => {
         }
 
     }
-
+    function reset () {
+        playerNames = Players(player1Name,player2Name);//makes the player names available
+        
+        gameBoard.currentGameBoard = ['','','','','','','','',''];
+        currentGameBoard = ['','','','','','','','',''];
+        for (let i = 0; i <=8; i++){
+            document.getElementById(i).innerText = '';
+        }
+        document.getElementById('player1Name').value = '';
+        document.getElementById('player2Name').value = '';
+        player1Name = '';
+        player2Name = '';
+        playerNames.player1Name = '';
+        playerNames.player2Name = '';
+        gameBoard.currentPlayerTurn.innerText = '';
+        xCount = 0;
+        oCount = 0;
+        resetButton.disabled = true;
+        startButton.disabled = false;
+        // removal of listeners. prevents the functions from being repeated when the reset button is clicked.
+        startButton.removeEventListener('click', () => {
+            initialStart(); 
+        })  
+        gridbuttons.forEach(div => {
+            div.removeEventListener('click', () => {
+                addFunctions();
+            })
+        })
+        resetButton.removeEventListener('click', () => {
+            reset();
+        })
+        
+    }
 
     
     return {
@@ -213,4 +198,3 @@ const gamePlay = (() => {
     
     return{compareWin,checkSign}
 })();
-
