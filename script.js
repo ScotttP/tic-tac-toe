@@ -34,7 +34,12 @@ const gameBoard = (() => {
     
 
     
-startButton.addEventListener('click', initialStart,false)
+startButton.addEventListener('click', () => {
+    initialStart()
+    startButton.removeEventListener('click', () => {
+        initialStart()
+    })    
+})
     
     function initialStart() {
         playerNames = Players(player1Name,player2Name);
@@ -54,13 +59,21 @@ startButton.addEventListener('click', initialStart,false)
         currentPlayerTurn.innerText = `${playerNames.player1Name} TURN`
         gridbuttons.forEach(div => {
             let id = div.id;
-            div.addEventListener('click', addFunctions(id),false)
+            div.addEventListener('click', () => {
+                addFunctions(id)
+                })
+            div.removeEventListener('click', () =>{
+                addFunctions(id)
+                })
             })
         }
-        
+        startButton.removeEventListener('click', () => {
+            initialStart()
+        })    
     }
       
        function addFunctions(id) { //adds the render,updategameboard functions and is called when clicked on
+        
         render(id,currentPlayerTurn,playerNames)//this renders on the board needs to be gamePlay.currentPlayerTurn because it's in the gamePlay module and not global
             
         if (document.getElementById(id).innerText === 'X'){ //if the grid at a certain id contains an X, increase the count of X.
@@ -97,11 +110,14 @@ startButton.addEventListener('click', initialStart,false)
         xCount = 0;
         oCount = 0;
         resetButton.disabled = true;
-        //resetButton.removeEventListener('click', reset, false) 
         startButton.disabled = false;
-        startButton.addEventListener('click', initialStart, false) // adds the start listener back since the game ended.
+
+        resetButton.removeEventListener('click', reset) 
+        startButton.removeEventListener('click', () => {
+            initialStart()
+        })     // adds the start listener back since the game ended.
         gridbuttons.forEach(div => {
-            div.removeEventListener('click', addFunctions,false) 
+            div.removeEventListener('click', addFunctions)
         })
         
     }
